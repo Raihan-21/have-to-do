@@ -1,6 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
 :root {
   --background: #ffffff;
@@ -18,4 +23,229 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+  font-family: 'Josefin Sans', sans-serif;
+  color: white;
+  background-color: hsl(235, 21%, 11%);
+  background-image: url('./assets/img/bg-desktop-dark.jpg');
+  background-repeat: no-repeat;
+  transition: all 300ms ease-in;
+}
+.App{
+  display: flex;
+  justify-content: center;
+}
+
+.home{
+  width: 38%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 5rem;
+}
+/* .header{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+} */
+.header .theme{
+  background-color: transparent;
+  background-image: url('./assets/img/icon-sun.svg'), url('./assets/img/icon-moon.svg');
+  background-repeat: no-repeat;
+  background-position-y: 0rem, -2rem;
+  transition: all 300ms ease-in;
+  width: 2rem;
+  border: none;
+}
+.home h1{
+  letter-spacing: .8rem;
+}
+/* form{
+  display: flex;
+  text-align: center;
+  position: relative;
+  
+} */
+
+form .input{
+  color: hsl(234, 39%, 85%);
+  font: inherit;
+  width: 100%;
+  padding-left: 3rem;
+  margin-bottom: 2rem;
+  background-color: hsl(235, 24%, 19%);
+  border: none;
+  border-radius: .3rem;
+  transition: all 250ms ease-in;
+}
+form button, .todo-wrap button, .info button{
+  background-color: transparent;
+}
+.circle-btn{
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  border-radius: 1.5rem;
+}
+.check .circle-btn{
+  background-image: url('./assets/img/icon-check.svg'), linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.circle-btn:hover{
+  border: 1px solid hsl(192, 100%, 67%);
+}
+form button{
+  z-index: 1;
+  border: 1px solid hsl(237, 14%, 26%);
+  margin: .6rem 0 0 .8rem;
+
+}
+button{
+  cursor: pointer;
+  outline: none;
+  background-color: transparent;
+}
+.content{
+  background-color: hsl(235, 24%, 19%);
+  transition: all 300ms ease-in;
+  border-radius: .3rem;
+}
+.todo-list{
+  width: 100%;
+  
+}
+.todo-wrap{
+  cursor: pointer;
+  color: hsl(234, 39%, 85%);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid hsl(237, 14%, 26%);
+
+}
+.todo-wrap button{
+  margin: 0 0 0 .8rem;
+  border: 1px solid hsl(237, 14%, 26%);
+}
+.todo-main{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem 0 3rem;
+}
+
+.todo-wrap .delete{
+  position: inherit;
+  border: none;
+  margin: none;
+  background-image: url('./assets/img/icon-cross.svg');
+  background-repeat: no-repeat;
+  background-position:center;
+  opacity: 0;
+}
+.todo-wrap:hover .delete{
+  opacity: 1;
+}
+.todo{
+  line-height: 2rem;
+}
+/* .info{
+  font-size: .8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  color: hsl(237, 14%, 35%);
+  font-weight: 700;
+  transition: all 300ms ease-in;
+} */
+.info button{
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: .8rem;
+  border: none;
+  transition: all 300ms ease-in;
+}
+.info .filters{
+  transition: all 300ms ease-in;
+}
+.info .filters button{
+  color: hsl(234, 11%, 52%);
+  font-weight: 700;
+  margin-right: 1rem;
+  border: none;
+}
+.info button:hover{
+  color: hsl(236, 33%, 92%);
+}
+
+.info .filters .active{
+  color: hsl(220, 98%, 61%);
+}
+.info .clear{
+  font-weight: 700;
+  color: #4d4e66;
+}
+.todo-wrap, form input{
+  height: 3rem;
+}
+.light{
+  background-image: url('./assets/img/bg-desktop-light.jpg');
+  background-color: hsl(0, 0%, 98%);
+}
+.light .theme{
+  background-image: url('./assets/img/icon-moon.svg'), url('./assets/img/icon-sun.svg');
+  background-position-y: 0rem, 2rem;
+  transition: all 300ms ease-in;
+}
+.light form .input{
+  color: hsl(235, 19%, 35%);
+  background-color: white;
+}
+.light .content{
+  background-color: white;
+}
+.light .todo-wrap{
+  color: hsl(235, 19%, 35%);
+  border-bottom: 1px solid hsl(233, 11%, 84%);
+}
+.light .info{
+  color: hsl(233, 11%, 84%);
+}
+.light .info .filters button{
+  color: hsl(236, 9%, 61%);
+}
+.light .info  button:hover{
+  color: hsl(235, 19%, 35%);
+}
+.light .info .filters .active{
+  color: hsl(220, 98%, 61%);
+}
+.light .info .clear{
+  color: hsl(233, 11%, 84%);
+}
+@media only screen and (max-width: 600px){
+  .home{
+    width: 80%;
+  }
+  .info{
+    position: relative;
+  }
+  .info .filters{
+    background-color: hsl(235, 24%, 19%);
+    width: 100%;
+    position: absolute;
+    top: 150%;
+    left: -.3%;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0 1rem 0;
+    border-radius: .3rem;
+  }
+  .light .info .filters{
+    background-color: white;
+    transition: all 300ms ease-in;
+  }
+  
 }
