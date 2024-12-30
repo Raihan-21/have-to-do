@@ -1,19 +1,16 @@
-import { useState } from "react";
 import { Todo } from "../types/Todo";
 const TodoContainer = ({
-  list,
   filteredList,
   handleComplete,
   handleDelete,
 }: {
-  list: Todo[];
   filteredList: Todo[];
   handleComplete: (item: Todo) => void;
   handleDelete: (id: number) => void;
 }) => {
   return (
     <div className="todo-list">
-      {filteredList.map((item: any) => {
+      {filteredList.map((item) => {
         return (
           <div
             className={`todo-wrap ${item.completed == true ? "check" : ""}`}

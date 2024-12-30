@@ -1,15 +1,21 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import MoonIcon from "@/assets/img/icon-moon.svg";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+// import MoonIcon from "@/assets/img/icon-moon.svg";
 import { Todo } from "./types/Todo";
 import TodoItem from "./components/molecules/TodoItem";
 
 const TodoComponent = () => {
-  const [isDarkTheme, setIsDarkTheme] = useState("");
+  // const [isDarkTheme, setIsDarkTheme] = useState("");
 
   const [todos, setTodos] = useState<Todo[]>([]);
-  // const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [todo, setTodo] = useState<string>("");
   const [status, setStatus] = useState("all");
 
@@ -24,12 +30,14 @@ const TodoComponent = () => {
     }
   }, [todos, status]);
 
-  // save local
-  const setStorageItem = (key: string, value: any) => {
+  const setStorageItem = (key: string, value: Todo[]) => {
     localStorage.setItem(key, JSON.stringify(value));
   };
-  const getStorageItem = (key: string, setState: any) => {
-    let storageList = JSON.parse(localStorage.getItem(key)!);
+  const getStorageItem = (
+    key: string,
+    setState: Dispatch<SetStateAction<Todo[]>>,
+  ) => {
+    const storageList = JSON.parse(localStorage.getItem(key)!);
     setState(storageList);
   };
 
@@ -50,7 +58,7 @@ const TodoComponent = () => {
   const handleDelete = (id: number) => {
     setTodos(todos.filter((item) => item.id !== id));
   };
-  const handleComplete = (item: any) => {
+  const handleComplete = (item: Todo) => {
     setTodos(
       todos.map((check) => {
         if (check.id === item.id) {
@@ -68,31 +76,13 @@ const TodoComponent = () => {
     // setDarkTheme(!darkTheme);
   };
 
-  // const statusHandler = (e) => {
-  //     setStatus(e.target.value)
-  // }
   const statusHandler = (value: string) => {
     setStatus(value);
   };
-  // const filterHandler = () => {
-  //   switch (status) {
-  //     case "completed":
-  //       setFilteredTodos(todos.filter((item) => item.completed === true));
-  //       break;
-  //     case "ongoing":
-  //       setFilteredTodos(todos.filter((item) => item.completed === false));
-  //       break;
-  //     default:
-  //       setFilteredTodos(todos);
-  //       break;
-  //   }
-  // };
 
-  // useEffect(() => {
-  //     getStorageItem('list',setTodos)
-  //     getStorageItem('theme', setDarkTheme)
-  //     console.log(list)
-  // }, [])
+  useEffect(() => {
+    getStorageItem("list", setTodos);
+  }, []);
   // useEffect(() => {
   //     if(darkTheme == false){
   //         document.body.classList.add('light')
@@ -107,7 +97,7 @@ const TodoComponent = () => {
   useEffect(() => {
     // filterHandler();
     setStorageItem("list", todos);
-  }, [todos, status]);
+  }, [todos]);
   return (
     <div className="home mx-auto">
       <div className="header mb-8 flex justify-between">
@@ -153,8 +143,7 @@ const TodoComponent = () => {
         }
         <div className="info flex items-center justify-between p-4 text-[.8rem] font-extrabold text-[#4d4e66] transition-all duration-300 ease-in">
           <div className="remain">
-            {todos.filter((item: any) => item.completed == false).length} items
-            left
+            {todos.filter((item) => item.completed == false).length} items left
           </div>
           <div className="filters">
             <button
