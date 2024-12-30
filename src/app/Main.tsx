@@ -1,24 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Todo from "./components/Todo";
+import { FormEvent, useEffect, useState } from "react";
 import MoonIcon from "@/assets/img/icon-moon.svg";
+import { Todo } from "./types/Todo";
+import TodoItem from "./components/molecules/TodoItem";
 
 const TodoComponent = () => {
   // const darkTheme = props.darkTheme
   // const setDarkTheme = props.setDarkTheme
 
   const [isDarkTheme, setIsDarkTheme] = useState("");
-  const [list, setList] = useState<any[]>([]);
+  const [list, setList] = useState<Todo[]>([]);
   const [todo, setTodo] = useState<string>("");
   const [status, setStatus] = useState("all");
-  const [filteredList, setFilteredList] = useState<any[]>([]);
-  const handleAdd = (e: any) => {
+  const [filteredTodo, setFilteredTodo] = useState<Todo[]>([]);
+  const handleAdd = (e: FormEvent) => {
     e.preventDefault();
     if (todo) {
       setList([
         ...list,
-        { text: todo, completed: false, id: Math.random() * 20 },
+        { content: todo, completed: false, id: Math.random() * 20 },
       ]);
       setTodo("");
     }
@@ -65,13 +66,13 @@ const TodoComponent = () => {
   const filterHandler = () => {
     switch (status) {
       case "completed":
-        setFilteredList(list.filter((item) => item.completed === true));
+        setFilteredTodo(list.filter((item) => item.completed === true));
         break;
       case "ongoing":
-        setFilteredList(list.filter((item) => item.completed === false));
+        setFilteredTodo(list.filter((item) => item.completed === false));
         break;
       default:
-        setFilteredList(list);
+        setFilteredTodo(list);
         break;
     }
   };
@@ -122,14 +123,23 @@ const TodoComponent = () => {
                   </select>} */}
       </form>
       <div className="content">
-        {list && (
-          <Todo
-            list={list}
-            handleComplete={handleComplete}
-            handleDelete={handleDelete}
-            filteredList={filteredList}
-          />
-        )}
+        {
+          list &&
+            filteredTodo.map((todo, i) => (
+              <TodoItem
+                todo={todo}
+                handleComplete={handleComplete}
+                handleDelete={handleDelete}
+                key={i}
+              />
+            ))
+          // <Todo
+          //   list={list}
+          //   handleComplete={handleComplete}
+          //   handleDelete={handleDelete}
+          //   filteredList={filteredList}
+          // />
+        }
         <div className="info flex items-center justify-between p-4 text-[.8rem] font-extrabold text-[#4d4e66] transition-all duration-300 ease-in">
           <div className="remain">
             {list.filter((item: any) => item.completed == false).length} items
