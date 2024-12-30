@@ -1,29 +1,29 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import MoonIcon from "@/assets/img/icon-moon.svg";
 import { Todo } from "./types/Todo";
 import TodoItem from "./components/molecules/TodoItem";
 
 const TodoComponent = () => {
-  // const darkTheme = props.darkTheme
-  // const setDarkTheme = props.setDarkTheme
-
   const [isDarkTheme, setIsDarkTheme] = useState("");
-  const [list, setList] = useState<Todo[]>([]);
+
+  const [todos, setTodos] = useState<Todo[]>([]);
+  // const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [todo, setTodo] = useState<string>("");
   const [status, setStatus] = useState("all");
-  const [filteredTodo, setFilteredTodo] = useState<Todo[]>([]);
-  const handleAdd = (e: FormEvent) => {
-    e.preventDefault();
-    if (todo) {
-      setList([
-        ...list,
-        { content: todo, completed: false, id: Math.random() * 20 },
-      ]);
-      setTodo("");
+
+  const filteredTodos = useMemo(() => {
+    switch (status) {
+      case "completed":
+        return todos.filter((item) => item.completed === true);
+      case "ongoing":
+        return todos.filter((item) => item.completed === false);
+      default:
+        return todos;
     }
-  };
+  }, [todos, status]);
+
   // save local
   const setStorageItem = (key: string, value: any) => {
     localStorage.setItem(key, JSON.stringify(value));
@@ -32,16 +32,27 @@ const TodoComponent = () => {
     let storageList = JSON.parse(localStorage.getItem(key)!);
     setState(storageList);
   };
+
+  const handleAdd = (e: FormEvent) => {
+    e.preventDefault();
+    if (todo) {
+      setTodos([
+        ...todos,
+        { content: todo, completed: false, id: Math.random() * 20 },
+      ]);
+      setTodo("");
+    }
+  };
   const handleClear = () => {
-    const newList = list.filter((item) => item.completed == false);
-    setList(newList);
+    const newList = todos.filter((item) => item.completed == false);
+    setTodos(newList);
   };
   const handleDelete = (id: number) => {
-    setList(list.filter((item) => item.id !== id));
+    setTodos(todos.filter((item) => item.id !== id));
   };
   const handleComplete = (item: any) => {
-    setList(
-      list.map((check) => {
+    setTodos(
+      todos.map((check) => {
         if (check.id === item.id) {
           return {
             ...check,
@@ -63,22 +74,22 @@ const TodoComponent = () => {
   const statusHandler = (value: string) => {
     setStatus(value);
   };
-  const filterHandler = () => {
-    switch (status) {
-      case "completed":
-        setFilteredTodo(list.filter((item) => item.completed === true));
-        break;
-      case "ongoing":
-        setFilteredTodo(list.filter((item) => item.completed === false));
-        break;
-      default:
-        setFilteredTodo(list);
-        break;
-    }
-  };
+  // const filterHandler = () => {
+  //   switch (status) {
+  //     case "completed":
+  //       setFilteredTodos(todos.filter((item) => item.completed === true));
+  //       break;
+  //     case "ongoing":
+  //       setFilteredTodos(todos.filter((item) => item.completed === false));
+  //       break;
+  //     default:
+  //       setFilteredTodos(todos);
+  //       break;
+  //   }
+  // };
 
   // useEffect(() => {
-  //     getStorageItem('list',setList)
+  //     getStorageItem('list',setTodos)
   //     getStorageItem('theme', setDarkTheme)
   //     console.log(list)
   // }, [])
@@ -94,9 +105,9 @@ const TodoComponent = () => {
   // }, [darkTheme])
 
   useEffect(() => {
-    filterHandler();
-    setStorageItem("list", list);
-  }, [list, status]);
+    // filterHandler();
+    setStorageItem("list", todos);
+  }, [todos, status]);
   return (
     <div className="home mx-auto">
       <div className="header mb-8 flex justify-between">
@@ -124,8 +135,8 @@ const TodoComponent = () => {
       </form>
       <div className="content">
         {
-          list &&
-            filteredTodo.map((todo, i) => (
+          todos &&
+            filteredTodos.map((todo, i) => (
               <TodoItem
                 todo={todo}
                 handleComplete={handleComplete}
@@ -142,7 +153,7 @@ const TodoComponent = () => {
         }
         <div className="info flex items-center justify-between p-4 text-[.8rem] font-extrabold text-[#4d4e66] transition-all duration-300 ease-in">
           <div className="remain">
-            {list.filter((item: any) => item.completed == false).length} items
+            {todos.filter((item: any) => item.completed == false).length} items
             left
           </div>
           <div className="filters">
