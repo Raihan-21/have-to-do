@@ -28,8 +28,8 @@ body {
 body{
   font-family: 'Josefin Sans', sans-serif;
   color: white;
-  background-color: hsl(235, 21%, 11%);
-  background-image: url('./assets/img/bg-desktop-dark.jpg');
+  /* background-color: #161722; */
+  /* background-image: url('./assets/img/bg-desktop-dark.jpg'); */
   background-repeat: no-repeat;
   transition: all 300ms ease-in;
 }
@@ -39,10 +39,18 @@ body{
 }
 
 .home{
-  width: 38%;
   display: flex;
   flex-direction: column;
-  margin-top: 5rem;
+}
+.mode--dark{
+  background-image: url('/bg-mobile-dark.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+.mode--light{
+  background-image: url('/bg-mobile-light.jpg');
+  background-repeat: no-repeat;  
+  background-size: 100% auto;
 }
 /* .header{
   display: flex;
@@ -51,7 +59,7 @@ body{
 } */
 .header .theme{
   background-color: transparent;
-  background-image: url('./assets/img/icon-sun.svg'), url('./assets/img/icon-moon.svg');
+  /* background-image: url('./assets/img/icon-sun.svg'), url('./assets/img/icon-moon.svg'); */
   background-repeat: no-repeat;
   background-position-y: 0rem, -2rem;
   transition: all 300ms ease-in;
@@ -191,13 +199,8 @@ button{
   height: 3rem;
 }
 .light{
-  background-image: url('./assets/img/bg-desktop-light.jpg');
+  /* background-image: url('./assets/img/bg-desktop-light.jpg'); */
   background-color: hsl(0, 0%, 98%);
-}
-.light .theme{
-  background-image: url('./assets/img/icon-moon.svg'), url('./assets/img/icon-sun.svg');
-  background-position-y: 0rem, 2rem;
-  transition: all 300ms ease-in;
 }
 .light form .input{
   color: hsl(235, 19%, 35%);
@@ -248,4 +251,13 @@ button{
     transition: all 300ms ease-in;
   }
   
+}
+
+@media only screen and (min-width: 768px){
+  .mode--dark{
+    background-image: url('/bg-desktop-dark.jpg');
+  }
+  .mode--light{
+    background-image: url('/bg-desktop-light.jpg');
+  }
 }

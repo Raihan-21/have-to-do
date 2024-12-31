@@ -8,16 +8,24 @@ import {
   useMemo,
   useState,
 } from "react";
-// import MoonIcon from "@/assets/img/icon-moon.svg";
+
 import { Todo } from "./types/Todo";
+import Image from "next/image";
 import TodoItem from "./components/molecules/TodoItem";
 
+import darkBackground from "@/app/assets/img/bg-desktop-dark.jpg";
+import lightBackground from "@/app/assets/img/bg-desktop-light.jpg";
+import MoonIcon from "./assets/img/icon-moon.svg";
+import SunIcon from "./assets/img/icon-sun.svg";
+
+import { motion } from "motion/react";
+
 const TodoComponent = () => {
-  // const [isDarkTheme, setIsDarkTheme] = useState("");
+  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
 
   const [todos, setTodos] = useState<Todo[]>([]);
   const [todo, setTodo] = useState<string>("");
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState<string>("all");
 
   const filteredTodos = useMemo(() => {
     switch (status) {
@@ -73,7 +81,7 @@ const TodoComponent = () => {
   };
   const themeHandler = () => {
     // Later
-    // setDarkTheme(!darkTheme);
+    setIsDarkTheme(!isDarkTheme);
   };
 
   const statusHandler = (value: string) => {
@@ -95,79 +103,98 @@ const TodoComponent = () => {
   // }, [darkTheme])
 
   useEffect(() => {
-    // filterHandler();
     setStorageItem("list", todos);
   }, [todos]);
   return (
-    <div className="home mx-auto">
-      <div className="header mb-8 flex justify-between">
-        <h1 className="text-[2rem] font-bold">TODO</h1>
-        <button onClick={themeHandler} className="">
-          <img src="./assets/img/icon-moon.svg" alt="" />
-        </button>
-      </div>
-
-      <form onSubmit={handleAdd} className="relative flex">
-        {/* {<input type="submit" value=''  className='submit'/>} */}
-        <button type="submit" className="submit circle-btn"></button>
-        <input
-          className="input"
-          placeholder="Create a new todo..."
-          value={todo}
-          onChange={(e) => setTodo(e.target.value)}
-        ></input>
-
-        {/* {<select onChange={statusHandler}>
-                      <option value="all">All</option>
-                      <option value="ongoing">On Going</option>
-                      <option value="completed">Completed</option>
-                  </select>} */}
-      </form>
-      <div className="content">
-        {
-          todos &&
-            filteredTodos.map((todo, i) => (
-              <TodoItem
-                todo={todo}
-                handleComplete={handleComplete}
-                handleDelete={handleDelete}
-                key={i}
-              />
-            ))
-          // <Todo
-          //   list={list}
-          //   handleComplete={handleComplete}
-          //   handleDelete={handleDelete}
-          //   filteredList={filteredList}
-          // />
-        }
-        <div className="info flex items-center justify-between p-4 text-[.8rem] font-extrabold text-[#4d4e66] transition-all duration-300 ease-in">
-          <div className="remain">
-            {todos.filter((item) => item.completed == false).length} items left
-          </div>
-          <div className="filters">
-            <button
-              onClick={() => statusHandler("all")}
-              className={status == "all" ? "active" : ""}
-            >
-              All
-            </button>
-            <button
-              onClick={() => statusHandler("ongoing")}
-              className={status == "ongoing" ? "active" : ""}
-            >
-              Active
-            </button>
-            <button
-              onClick={() => statusHandler("completed")}
-              className={status == "completed" ? "active" : ""}
-            >
-              Completed
-            </button>
-          </div>
-          <button className="clear" onClick={handleClear}>
-            Clear Completed
+    <div
+      className={`relative min-h-[100vh] w-full pt-14 ${isDarkTheme ? "mode--dark bg-primary" : "mode--light bg-white"} ease transition-all duration-500`}
+    >
+      <div className="home relative z-[2] mx-auto w-[38%]">
+        <div className="header mb-8 flex justify-between">
+          <h1 className="text-[2rem] font-bold">TODO</h1>
+          <button onClick={themeHandler} className="overflow-hidden">
+            <Image
+              src={MoonIcon}
+              alt=""
+              width={25}
+              height={25}
+              className={
+                isDarkTheme
+                  ? "ease translate-y-0 opacity-100 transition-all duration-200"
+                  : "ease translate-y-[100%] opacity-0 transition-all duration-200"
+              }
+            />
+            <Image
+              src={SunIcon}
+              alt=""
+              width={25}
+              height={25}
+              className={
+                !isDarkTheme
+                  ? "ease translate-y-[-100%] opacity-100 transition-all duration-200"
+                  : "ease translate-y-[-200%] opacity-0 transition-all duration-200"
+              }
+            />
           </button>
+        </div>
+
+        <form onSubmit={handleAdd} className="relative flex">
+          {/* {<input type="submit" value=''  className='submit'/>} */}
+          <button type="submit" className="submit circle-btn"></button>
+          <input
+            className="input"
+            placeholder="Create a new todo..."
+            value={todo}
+            onChange={(e) => setTodo(e.target.value)}
+          ></input>
+        </form>
+        <div className="content">
+          {
+            todos &&
+              filteredTodos.map((todo, i) => (
+                <TodoItem
+                  todo={todo}
+                  handleComplete={handleComplete}
+                  handleDelete={handleDelete}
+                  key={i}
+                />
+              ))
+            // <Todo
+            //   list={list}
+            //   handleComplete={handleComplete}
+            //   handleDelete={handleDelete}
+            //   filteredList={filteredList}
+            // />
+          }
+          <div className="info flex items-center justify-between p-4 text-[.8rem] font-extrabold text-[#4d4e66] transition-all duration-300 ease-in">
+            <div className="remain">
+              {todos.filter((item) => item.completed == false).length} items
+              left
+            </div>
+            <div className="filters">
+              <button
+                onClick={() => statusHandler("all")}
+                className={status == "all" ? "active" : ""}
+              >
+                All
+              </button>
+              <button
+                onClick={() => statusHandler("ongoing")}
+                className={status == "ongoing" ? "active" : ""}
+              >
+                Active
+              </button>
+              <button
+                onClick={() => statusHandler("completed")}
+                className={status == "completed" ? "active" : ""}
+              >
+                Completed
+              </button>
+            </div>
+            <button className="clear" onClick={handleClear}>
+              Clear Completed
+            </button>
+          </div>
         </div>
       </div>
     </div>
