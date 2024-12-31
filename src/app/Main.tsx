@@ -13,12 +13,9 @@ import { Todo } from "./types/Todo";
 import Image from "next/image";
 import TodoItem from "./components/molecules/TodoItem";
 
-import darkBackground from "@/app/assets/img/bg-desktop-dark.jpg";
-import lightBackground from "@/app/assets/img/bg-desktop-light.jpg";
 import MoonIcon from "./assets/img/icon-moon.svg";
 import SunIcon from "./assets/img/icon-sun.svg";
 
-import { motion } from "motion/react";
 import {
   closestCenter,
   DndContext,
@@ -124,7 +121,7 @@ const TodoComponent = () => {
   };
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    setTodos((todo) => {
+    setTodos(() => {
       const oldIndex = todos.findIndex((todo) => todo.id === active.id);
       const newIndex = todos.findIndex((todo) => todo.id === over?.id);
 
