@@ -44,11 +44,16 @@ const TodoComponent = () => {
   const [status, setStatus] = useState<string>("all");
 
   const pointerSensor = useSensor(PointerSensor, {
-    activationConstraint: { delay: 100, tolerance: 10 },
+    activationConstraint: { delay: 100, tolerance: 100 },
   });
   const mouseSensor = useSensor(MouseSensor);
   const keyboardSensor = useSensor(KeyboardSensor);
-  const touchSensor = useSensor(TouchSensor);
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 1000,
+      tolerance: 50,
+    },
+  });
 
   const sensors = useSensors(
     pointerSensor,
