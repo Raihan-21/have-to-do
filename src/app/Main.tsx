@@ -19,6 +19,22 @@ import MoonIcon from "./assets/img/icon-moon.svg";
 import SunIcon from "./assets/img/icon-sun.svg";
 
 import { motion } from "motion/react";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  MouseSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 const TodoComponent = () => {
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
@@ -26,6 +42,20 @@ const TodoComponent = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [todo, setTodo] = useState<string>("");
   const [status, setStatus] = useState<string>("all");
+
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: { delay: 100, tolerance: 10 },
+  });
+  const mouseSensor = useSensor(MouseSensor);
+  const keyboardSensor = useSensor(KeyboardSensor);
+  const touchSensor = useSensor(TouchSensor);
+
+  const sensors = useSensors(
+    pointerSensor,
+    mouseSensor,
+    keyboardSensor,
+    touchSensor,
+  );
 
   const filteredTodos = useMemo(() => {
     switch (status) {
@@ -86,6 +116,15 @@ const TodoComponent = () => {
 
   const statusHandler = (value: string) => {
     setStatus(value);
+  };
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setTodos((todo) => {
+      const oldIndex = todos.findIndex((todo) => todo.id === active.id);
+      const newIndex = todos.findIndex((todo) => todo.id === over?.id);
+
+      return arrayMove(todos, oldIndex, newIndex);
+    });
   };
 
   useEffect(() => {
@@ -149,23 +188,34 @@ const TodoComponent = () => {
           ></input>
         </form>
         <div className="content">
-          {
-            todos &&
-              filteredTodos.map((todo, i) => (
-                <TodoItem
-                  todo={todo}
-                  handleComplete={handleComplete}
-                  handleDelete={handleDelete}
-                  key={i}
-                />
-              ))
-            // <Todo
-            //   list={list}
-            //   handleComplete={handleComplete}
-            //   handleDelete={handleDelete}
-            //   filteredList={filteredList}
-            // />
-          }
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              strategy={verticalListSortingStrategy}
+              items={filteredTodos}
+            >
+              {
+                todos &&
+                  filteredTodos.map((todo, i) => (
+                    <TodoItem
+                      todo={todo}
+                      handleComplete={handleComplete}
+                      handleDelete={handleDelete}
+                      key={i}
+                    />
+                  ))
+                // <Todo
+                //   list={list}
+                //   handleComplete={handleComplete}
+                //   handleDelete={handleDelete}
+                //   filteredList={filteredList}
+                // />
+              }
+            </SortableContext>
+          </DndContext>
           <div className="info flex items-center justify-between p-4 text-[.8rem] font-extrabold text-[#4d4e66] transition-all duration-300 ease-in">
             <div className="remain">
               {todos.filter((item) => item.completed == false).length} items

@@ -1,4 +1,6 @@
 import { Todo } from "@/app/types/Todo";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 
 const TodoItem = ({
@@ -10,10 +12,21 @@ const TodoItem = ({
   handleComplete: (item: Todo) => void;
   handleDelete: (id: number) => void;
 }) => {
+  const { attributes, listeners, transform, transition, setNodeRef } =
+    useSortable({ id: todo.id });
+
+  const styles = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
   return (
     <div
-      className={`todo-wrap ${todo.completed == true ? "check" : ""}`}
+      ref={setNodeRef}
+      className={`todo-wrap bg-secondary rounded-[.3rem] ${todo.completed == true ? "check" : ""}`}
+      style={styles}
       key={todo.id}
+      {...listeners}
+      {...attributes}
     >
       <button
         onClick={() => handleComplete(todo)}

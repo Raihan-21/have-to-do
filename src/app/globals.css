@@ -116,7 +116,7 @@ button{
   background-color: transparent;
 }
 .content{
-  background-color: hsl(235, 24%, 19%);
+  background-color: #25273c;
   transition: all 300ms ease-in;
   border-radius: .3rem;
 }
