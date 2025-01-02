@@ -1,7 +1,5 @@
 import { Todo } from "@/app/types/Todo";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import React, { CSSProperties, Ref, StyleHTMLAttributes } from "react";
+import React, { CSSProperties } from "react";
 
 const TodoItem = ({
   todo,
