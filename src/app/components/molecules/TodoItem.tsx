@@ -1,46 +1,45 @@
 import { Todo } from "@/app/types/Todo";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import React from "react";
+import React, { CSSProperties } from "react";
 
 const TodoItem = ({
   todo,
+  variant,
   handleComplete,
   handleDelete,
+  refSetter,
+  styles,
+  ...props
 }: {
   todo: Todo;
-  handleComplete: (item: Todo) => void;
-  handleDelete: (id: number) => void;
+  variant?: string;
+  handleComplete?: (item: Todo) => void;
+  handleDelete?: (id: number) => void;
+  refSetter?: (node: HTMLElement | null) => void;
+  styles?: CSSProperties;
 }) => {
-  const { attributes, listeners, transform, transition, setNodeRef } =
-    useSortable({ id: todo.id });
-
-  const styles = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
   return (
     <div
-      ref={setNodeRef}
-      className={`todo-wrap bg-secondary rounded-[.3rem] ${todo.completed == true ? "check" : ""}`}
+      ref={refSetter}
+      className={`todo-wrap rounded-[.3rem] bg-secondary ${todo.completed == true ? "check" : ""} ${variant === "ghost" && "opacity-50"}`}
       style={styles}
       key={todo.id}
-      {...listeners}
-      {...attributes}
+      {...props}
     >
       <button
-        onClick={() => handleComplete(todo)}
+        onClick={() => {
+          if (handleComplete) handleComplete(todo);
+        }}
         className="stat-btn circle-btn"
       ></button>
       <div className="todo-main">
         <div className="todo">{todo.content}</div>
         <button
-          onClick={() => handleDelete(todo.id)}
+          onClick={() => {
+            if (handleDelete) handleDelete(todo.id);
+          }}
           className="delete circle-btn"
         ></button>
       </div>
-
-      {/* <button onClick={() => handleDelete(todo.id)}>Delete</button> */}
     </div>
   );
 };

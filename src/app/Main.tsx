@@ -20,6 +20,8 @@ import {
   closestCenter,
   DndContext,
   DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
   KeyboardSensor,
   MouseSensor,
   PointerSensor,
@@ -32,6 +34,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import SortableTodo from "./components/molecules/SortableTodo";
 
 const TodoComponent = () => {
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
@@ -59,6 +62,9 @@ const TodoComponent = () => {
     touchSensor,
   );
 
+  const [activeDraggableItem, setActiveDraggableItem] = useState<Todo | null>();
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+
   const filteredTodos = useMemo(() => {
     switch (status) {
       case "completed":
@@ -78,7 +84,7 @@ const TodoComponent = () => {
     setState: Dispatch<SetStateAction<Todo[]>>,
   ) => {
     const storageList = JSON.parse(localStorage.getItem(key)!);
-    setState(storageList);
+    setState(storageList ?? []);
   };
 
   const handleAdd = (e: FormEvent) => {
@@ -119,14 +125,28 @@ const TodoComponent = () => {
   const statusHandler = (value: string) => {
     setStatus(value);
   };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setIsDragging(true);
+    setActiveDraggableItem(active.data.current as Todo);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+
+    // Set todos after sorting
     setTodos(() => {
+      // Currently dragged
       const oldIndex = todos.findIndex((todo) => todo.id === active.id);
+
+      // Droppable destination
       const newIndex = todos.findIndex((todo) => todo.id === over?.id);
 
       return arrayMove(todos, oldIndex, newIndex);
     });
+    setActiveDraggableItem(null);
+    setIsDragging(false);
   };
 
   useEffect(() => {
@@ -193,29 +213,30 @@ const TodoComponent = () => {
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
             <SortableContext
               strategy={verticalListSortingStrategy}
               items={filteredTodos}
             >
-              {
-                todos &&
-                  filteredTodos.map((todo, i) => (
-                    <TodoItem
-                      todo={todo}
-                      handleComplete={handleComplete}
-                      handleDelete={handleDelete}
-                      key={i}
-                    />
-                  ))
-                // <Todo
-                //   list={list}
-                //   handleComplete={handleComplete}
-                //   handleDelete={handleDelete}
-                //   filteredList={filteredList}
-                // />
-              }
+              {todos &&
+                filteredTodos.map((todo, i) => (
+                  <SortableTodo
+                    todo={todo}
+                    handleComplete={handleComplete}
+                    handleDelete={handleDelete}
+                    variant={
+                      isDragging && activeDraggableItem?.id === todo.id
+                        ? "ghost"
+                        : ""
+                    }
+                    key={i}
+                  />
+                ))}
+              <DragOverlay>
+                {activeDraggableItem && <TodoItem todo={activeDraggableItem} />}
+              </DragOverlay>
             </SortableContext>
           </DndContext>
           <div className="info flex items-center justify-between p-4 text-[.8rem] font-extrabold text-[#4d4e66] transition-all duration-300 ease-in">
