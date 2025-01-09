@@ -201,8 +201,10 @@ const TodoComponent = () => {
 
         <form onSubmit={handleAdd} className="relative flex">
           {/* {<input type="submit" value=''  className='submit'/>} */}
+          <label htmlFor="input" />
           <button type="submit" className="submit circle-btn"></button>
           <input
+            name="todo"
             className="input"
             placeholder="Create a new todo..."
             value={todo}
