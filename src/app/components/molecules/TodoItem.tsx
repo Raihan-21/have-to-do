@@ -24,6 +24,7 @@ const TodoItem = ({
       style={styles}
       key={todo.id}
       {...props}
+      data-testid="todo-item"
     >
       <button
         onClick={() => {
@@ -34,6 +35,7 @@ const TodoItem = ({
       <div className="todo-main">
         <div className="todo">{todo.content}</div>
         <button
+          data-testid="delete"
           onClick={() => {
             if (handleDelete) handleDelete(todo.id);
           }}
